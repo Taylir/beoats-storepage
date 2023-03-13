@@ -1,0 +1,1 @@
+# beoats-storepage
