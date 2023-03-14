@@ -22,6 +22,7 @@ const Cart = () => {
     cartItems,
     setShowCart,
     toggleCartItemQuantity,
+    onRemove,
   } = useStateContext();
 
   return (
@@ -93,7 +94,7 @@ const Cart = () => {
                     <button
                       type="button"
                       className="remove-item"
-                      onClick={null}
+                      onClick={() => onRemove(item)}
                     >
                       <TiDeleteOutline />
                     </button>

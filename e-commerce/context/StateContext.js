@@ -52,31 +52,36 @@ export const StateContext = ({ children }) => {
     toast.success(`${qty} ${product.name} added to cart!`);
   };
 
+  const onRemove = (product) => {
+    foundProduct = cartItems.find((item) => item._id === product._id);
+
+    setTotalPrice(
+      (prevPrice) => prevPrice - foundProduct.price * foundProduct.quantity
+    );
+    setTotalQuantities(
+      (prevTotalQuantities) => prevTotalQuantities - foundProduct.quantity
+    );
+    setCartItems(cartItems.filter((item) => item._id !== product._id));
+  };
+
   const toggleCartItemQuantity = (id, value) => {
     foundProduct = cartItems.find((item) => item._id === id);
-    index = cartItems.findIndex((product) => product.id === id);
-    const insert = function (arr, index, item) {
-      return [...arr.slice(0, index), item, ...arr.slice(index)];
-    };
-    const newCartItems = cartItems.filter((item) => item._id !== id);
 
     if (value === "inc") {
-      const wantedItem = {
-        ...foundProduct,
-        quantity: foundProduct.quantity + 1,
-      };
-
-      setCartItems(insert(newCartItems, index, wantedItem));
+      setCartItems(
+        cartItems.map((item) =>
+          item._id === id ? { ...item, quantity: item.quantity + 1 } : item
+        )
+      );
       setTotalPrice((prevTotalPrice) => prevTotalPrice + foundProduct.price);
       setTotalQuantities((prevTotalQuantities) => prevTotalQuantities + 1);
     } else if (value === "dec") {
       if (foundProduct.quantity > 1) {
-        const wantedItem = {
-          ...foundProduct,
-          quantity: foundProduct.quantity + 1,
-        };
-
-        setCartItems(insert(newCartItems, index, wantedItem));
+        setCartItems(
+          cartItems.map((item) =>
+            item._id === id ? { ...item, quantity: item.quantity - 1 } : item
+          )
+        );
         setTotalPrice((prevTotalPrice) => prevTotalPrice - foundProduct.price);
         setTotalQuantities((prevTotalQuantities) => prevTotalQuantities - 1);
       }
@@ -96,6 +101,7 @@ export const StateContext = ({ children }) => {
         decQty,
         onAdd,
         toggleCartItemQuantity,
+        onRemove,
       }}
     >
       {children}
