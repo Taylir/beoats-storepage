@@ -1,5 +1,5 @@
 import Link from "next/link";
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 
 import {
   AiOutlineMinus,
@@ -30,7 +30,6 @@ const Cart = () => {
 
     if (response.statusCode === 500) return;
 
-    console.log(response);
     const data = await response.json();
 
     toast.loading("Redirecting...");
@@ -45,7 +44,12 @@ const Cart = () => {
     setShowCart,
     toggleCartItemQuantity,
     onRemove,
+    setCartItems,
   } = useStateContext();
+
+  useEffect(() => {
+    // setCartItems(localStorage);
+  }, []);
 
   return (
     <div className="cart-wrapper" ref={cartRef}>
@@ -53,7 +57,9 @@ const Cart = () => {
         <button
           type="button"
           className="cart-heading"
-          onClick={() => setShowCart(false)}
+          onClick={() => {
+            setShowCart(false);
+          }}
         >
           <AiOutlineLeft />
           <span className="heading">Your Cart</span>
@@ -77,7 +83,7 @@ const Cart = () => {
         )}
 
         <div className="product-container">
-          {cartItems.length >= 1 &&
+          {cartItems?.length >= 1 &&
             cartItems.map((item) => (
               <div className="product" key={item._id}>
                 <img
@@ -87,7 +93,7 @@ const Cart = () => {
                 />
                 <div className="item-desc">
                   <div className="flex top">
-                    <h5>{item.name}</h5>
+                    <h5>{item?.name}</h5>
                     <h4>${item.price}</h4>
                   </div>
                   <div className="flex bottom">
